@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SỐNG</title>
+
+<style>
+@font-face { font-family: 'ProjectFont'; src: url('assets/fonts/ProjectFont.woff2'); }
+@font-face { font-family: 'Melodrama'; src: url('assets/fonts/Melodrama-Bold.woff2'); }
+@font-face { font-family: 'GeneralSans'; src: url('assets/fonts/GeneralSans-Regular.woff2'); }
+@font-face { font-family: 'AzeretMono'; src: url('assets/fonts/AzeretMono-ThinItalic.woff2'); }
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'GeneralSans';overflow-x:hidden;}
+
+/* NAV */
+.ui {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+.brand {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      color: black;
+      font-family: 'Melodrama';
+      font-weight: 700;
+      font-size: 37px;
+    }
+
+    .nav {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      display: flex;
+      gap: 30px;
+      pointer-events: auto;
+    }
+
+    .nav a {
+  color: black;
+  font-family: 'GeneralSans';
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s ease;
+  text-decoration: none; /* 👈 dòng quan trọng */
+}
+
+    .nav a:hover {
+      transform: scale(1.15);
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0%;
+      height: 2px;
+      background: black;
+      transition: width 0.25s ease;
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+/* ===== INTRO ===== */
+.intro{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+
+ background: radial-gradient(
+  circle at 30% 30%,
+  #6c1515 0%,
+  #680101 45%,
+  #282d65 100%
+);
+}
+
+.hint{
+  position:absolute;
+  top:60%; /* 👈 chỉnh lên xuống */
+  left:50%;
+  transform:translate(-50%,-50%);
+
+  color:white;
+  font-family:'GeneralSans';
+  font-size:12px;
+  opacity:0.6;
+  letter-spacing:1px;
+
+  pointer-events:none;
+  transition:0.4s;
+  animation: fadeIn 1.5s ease forwards;
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:0.6}
+}
+
+/* TILT SHIFT TEXT */
+.intro h1{
+  font-family:'Melodrama';
+  font-size:7vw;
+  color:white;
+
+  filter: blur(18px); /* blur nền */
+}
+#title{
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* EXPLORE */
+.explore{
+position:absolute;
+bottom:40px;
+color:white;
+cursor:pointer;
+}
+.explore::after{
+content:"";display:block;height:1px;width:0;background:white;transition:.3s;
+}
+.explore:hover::after{width:100%;}
+
+/* ẨN INTRO */
+.intro.hide{
+opacity:0;
+pointer-events:none;
+transition:0.8s;
+}
+
+#title {
+  opacity: 0;
+
+  /* 👇 bắt buộc để mask hoạt động */
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-size: cover;
+  mask-size: cover;
+
+  color: white;
+}
+
+/* ===== HERO ===== */
+.hero{
+  height:100vh;
+  background:url('assets/images/song/background.jpg') center/cover;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:black;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  backdrop-filter: blur(20px);
+  z-index:1;
+}
+
+/* layer */
+.hero-content,
+.timeline-left,
+.timeline-right{
+  position:relative;
+  z-index:2;
+  color:black;
+}
+
+/* TEXT */
+.title{
+  font-family:'ProjectFont';
+  font-size:10vw;
+  text-align: center;
+}
+
+.tagline{
+  margin-top:20px;
+  font-style:italic;
+  text-align:center;
+}
+
+/* ===== ANIMATION ===== */
+
+.hero-content {
+  opacity: 0;
+  transform: scale(0.9);
+  filter: blur(12px);
+  transition: all 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-content.show {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+
+/* tagline riêng */
+.tagline {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: all 1.6s ease;
+}
+
+.hero-content.show .tagline {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 1.1s;
+}
+
+/* TIMELINE */
+.timeline-left{
+position:absolute;
+top:30px;
+left:40px;
+font-family:'AzeretMono';
+font-size:22px;
+}
+.timeline-right{
+position:absolute;
+bottom:30px;
+right:40px;
+font-family:'AzeretMono';
+font-size:22px;
+}
+
+/* ===== SECTION 2 ===== */
+.gallery {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: all 0.6s ease;
+  opacity: 0;
+
+  width: auto;
+  height: auto;
+}
+
+.item img {
+  width: auto;
+  height: auto;
+  max-width: 600px;   /* 👈 giới hạn thôi, không ép */
+  max-height: 65vh;
+
+  object-fit: contain; /* 👈 không crop nữa */
+  display: block;
+  border-radius: 12px;
+}
+
+/* CENTER */
+.item.center {
+  transform: translate(-50%, -60%) scale(1.1); /* 👈 từ -50% → -60% */
+}
+
+/* LEFT */
+.item.left {
+  transform: translate(-500px, -160px) scale(0.95);
+}
+
+/* RIGHT */
+.item.right {
+  transform: translate(300px, -80px) scale(0.95);
+}
+
+/* LEFT xa */
+.item.left-2 {
+  transform: translate(-900px, -220px) scale(0.8);
+}
+
+/* RIGHT xa */
+.item.right-2 {
+  transform: translate(700px, -120px) scale(0.8);
+}
+
+.item.center,
+.item.left,
+.item.right,
+.item.left-2,
+.item.right-2 {
+  opacity: 1;
+}
+
+
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+
+  font-family:'AzeretMono';
+
+  font-size:88px;
+  font-weight:100;
+  line-height:0.7;
+
+  color:rgba(0,0,0,0.34);
+
+  cursor:pointer;
+  user-select:none;
+
+  z-index:20;
+
+  transition:
+    transform .35s cubic-bezier(.19,1,.22,1),
+    opacity .35s ease,
+    color .35s ease;
+}
+
+.arrow:hover{
+  color:rgba(0,0,0,0.72);
+  transform:translateY(-50%) scale(1.06);
+}
+
+.arrow:active{
+  transform:translateY(-50%) scale(.96);
+}
+
+.arrow.left{
+  left:24px;
+}
+
+.arrow.right{
+  right:24px;
+}
+
+.arrow.disabled{
+  opacity:.12;
+  pointer-events:none;
+}
+
+/* ===== FILM ===== */
+/* ===== FILM ===== */
+
+.film{
+  position:relative;
+
+  min-height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:#050505;
+
+  overflow:hidden;
+}
+
+/* ambient glow */
+.film::before{
+  content:'';
+
+  position:absolute;
+  inset:0;
+
+  background:
+  radial-gradient(
+    circle at center,
+    rgba(120,40,20,.18) 0%,
+    rgba(0,0,0,0) 60%
+  );
+
+  pointer-events:none;
+
+  z-index:1;
+}
+
+.film-wrap{
+  position:relative;
+
+  width:min(1100px,88vw);
+
+  z-index:3;
+}
+
+/* VIDEO */
+
+.film video{
+  width:100%;
+  max-height:84vh;
+
+  display:block;
+
+  object-fit:cover;
+
+  background:black;
+
+  border-radius:2px;
+
+  box-shadow:
+    0 0 120px rgba(0,0,0,.45);
+
+  opacity:0;
+
+  transform:
+    scale(1.03)
+    translateY(20px);
+
+  filter:
+    blur(10px)
+    saturate(.9);
+
+  animation:
+    filmReveal 2s cubic-bezier(.19,1,.22,1) .2s forwards;
+
+  transition:
+    transform .9s cubic-bezier(.19,1,.22,1),
+    filter .9s ease;
+}
+
+.film video:hover{
+  transform:scale(1.008);
+}
+
+/* subtle grain overlay */
+
+.film-wrap::after{
+  content:'';
+
+  position:absolute;
+  inset:0;
+
+  background-image:
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      rgba(255,255,255,.025) 0px,
+      rgba(255,255,255,0) 1px
+    );
+
+  mix-blend-mode:soft-light;
+
+  opacity:.25;
+
+  pointer-events:none;
+
+  animation:grainMove .25s steps(2) infinite;
+}
+
+/* TEXT */
+
+.film-intro{
+  position:absolute;
+
+  left:50%;
+  bottom:6vh;
+
+  transform:translateX(-50%);
+
+  z-index:5;
+
+  pointer-events:none;
+}
+
+.film-intro p{
+  position:relative;
+
+  color:rgba(255,255,255,.46);
+
+  font-family:'AzeretMono', monospace;
+  font-size:10px;
+  font-style:italic;
+  font-weight:100;
+
+  letter-spacing:.28em;
+  text-transform:uppercase;
+
+  white-space:nowrap;
+
+  opacity:0;
+
+  transform:
+    translateY(14px);
+
+  filter:blur(8px);
+
+  animation:
+    introText 2.2s cubic-bezier(.19,1,.22,1) .8s forwards;
+}
+
+/* line */
+
+.film-intro p::before{
+  content:'';
+
+  position:absolute;
+
+  left:50%;
+  top:-16px;
+
+  transform:translateX(-50%);
+
+  width:0;
+  height:1px;
+
+  background:
+    rgba(255,255,255,.14);
+
+  animation:
+    introLine 1.8s cubic-bezier(.19,1,.22,1) 1s forwards;
+}
+
+/* keyframes */
+
+@keyframes filmReveal{
+  to{
+    opacity:1;
+
+    transform:
+      scale(1)
+      translateY(0);
+
+    filter:
+      blur(0)
+      saturate(1);
+  }
+}
+
+@keyframes introText{
+  to{
+    opacity:1;
+
+    transform:translateY(0);
+
+    filter:blur(0);
+  }
+}
+
+@keyframes introLine{
+  to{
+    width:110px;
+  }
+}
+
+@keyframes grainMove{
+  0%{
+    transform:translate(0,0);
+  }
+
+  100%{
+    transform:translate(1px,-1px);
+  }
+}
+
+/* ===== SECTION 3 ===== */
+.info{
+  position: relative;
+  min-height: 100vh;
+
+  background: linear-gradient(
+  135deg,
+  #680101 0%,
+  #6c1515 40%,
+  #b51c1c 70%,
+  #680101 100%
+);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 120px 10vw;
+  color: #ffffe3;
+
+  overflow: hidden;
+}
+
+/* phần text trên */
+.info-text{
+  max-width: 900px;
+}
+
+.info-text p{
+  font-family: 'GeneralSans';
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.info-text p {
+  opacity: 0;
+  transform: translateY(40px);
+  filter: blur(6px);
+  transition: all 1s ease;
+}
+
+.info-text p.show {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.boxes{
+  display: flex;
+  gap: 40px;
+  margin-top: 80px;
+
+  align-items: stretch; /* 👈 đảm bảo box cao đều */
+}
+
+.box{
+  flex: 1;
+  background: #3f6fb5;
+  padding: 40px;
+  border-radius: 12px;
+
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 220px;
+
+  /* 👇 FIX TEXT */
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: unset !important;
+}
+
+.box {
+  opacity: 0;
+  transform: translateY(60px) scale(0.95);
+  transition: all 0.8s ease;
+}
+
+.box.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.info-text{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 900px;
+}
+
+/* base */
+.info-text p{
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 900px;
+}
+
+/* bậc thang NHẸ – nhìn tinh tế */
+.info-text p:nth-child(1){
+  margin-left: -5vw;
+}
+
+.info-text p:nth-child(2){
+  margin-left: 300px;
+}
+
+.info-text p:nth-child(3){
+  margin-left: 0;              /* reset lại */
+  max-width: 520px;            /* giữ độ dài đẹp */
+  transform: translateX(800px); /* 👈 đẩy sang phải nhưng KHÔNG bị bó */    
+}
+
+/* ===== REFLECTION ===== */
+.project-font{
+  font-family:'ProjectFont';
+  font-size:1.05em; /* optional */
+  letter-spacing:0.03em;
+}
+.reflection{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+
+  background: radial-gradient(
+      circle at center,
+  #67a9e8 0%,
+  #67a9e8 20%,
+  #282d65 50%,
+  #680101 100%
+   );
+}
+
+.reflection p{
+font-family:'Melodrama';
+font-size:2.2vw;
+max-width:900px;
+color:#ffffe3;
+line-height:1.4;
+}
+.reveal-text span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(8px);
+  transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-text {
+  line-height: 1.5;
+}
+
+/* khi active */
+.reveal-text.show span {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* delay từng dòng */
+.reveal-text.show span:nth-child(1){ transition-delay: 0.2s; }
+.reveal-text.show span:nth-child(2){ transition-delay: 0.5s; }
+.reveal-text.show span:nth-child(3){ transition-delay: 0.8s; }
+.reveal-text.show span:nth-child(4){ transition-delay: 1.1s; }
+.reveal-text.show span:nth-child(5){ transition-delay: 1.4s; }
+
+.reveal-text span:first-child {
+  font-size: 2.6vw;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <h1 id="title">Alive or existing</h1>
+  <div class="hint" id="hint">MOVE TO REVEAL</div>
+  <div class="explore" onclick="enterSite()">EXPLORE</div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="main">
+<div class="timeline-left">MARCH 2025</div>
+<div class="timeline-right">DECEMBER 2025</div>
+
+<div class="hero-content">
+<div class="title">SỐNG</div>
+<div class="tagline">
+To feel, to live, to love.
+</div>
+</div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="gallery">
+  <div class="slider" id="slider">
+
+    <div class="item">
+      <img src="assets/images/song/1.jpg">
+    </div>
+
+    <div class="item">
+      <img src="assets/images/song/2.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/3.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/4.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/5.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/6.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/7.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/8.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/9.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/10.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/11.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/12.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/13.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/14.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/15.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/16.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/17.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/18.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/19.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/20.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/21.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/22.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/23.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/24.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/25.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/26.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/27.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/28.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/29.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/30.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/31.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/32.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/33.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/34.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/35.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/36.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/37.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/38.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/39.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/40.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/41.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/42.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/43.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/44.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/45.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/46.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/47.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/48.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/49.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/50.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/51.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/52.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/53.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/54.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/55.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/56.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/57.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/58.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/59.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/60.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/61.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/62.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/63.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/64.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/65.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/66.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/67.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/68.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/69.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/70.jpg"> 
+    </div>
+
+<div class="item">
+      <img src="assets/images/song/71.jpg"> 
+    </div>
+
+ <div class="arrow left" id="arrowLeft">‹</div>
+ <div class="arrow right" id="arrowRight">›</div>
+  </div>
+</section>
+
+<!-- VIDEO SECTION -->
+<section class="film">
+
+  <div class="film-intro">
+    <p>
+      A final fragment of the project.
+    </p>
+  </div>
+
+  <div class="film-wrap">
+
+    <video
+  id="songFilm"
+  src="assets/videos/songfinal.mp4"
+  poster="assets/images/song/preview.jpg"
+  playsinline
+  controls
+  preload="auto"
+></video>
+
+  </div>
+
+</section>
+
+<!-- SECTION 3 -->
+<section class="info">
+
+<div class="info-text">
+  <p>In March 2025, I found myself overwhelmed by the pressures of club responsibilities, academics, and personal relationships. Amid that exhausting cycle, I reopened a book about a protagonist with only thirty days left to live. After reading it, I began asking myself: if I only had one day left to live, what would I choose to do? </p>
+  <p> From that inspiration, I created <span class="project-font">SỐNG</span>, a project centered around a high school student struggling beneath the pressures of life and the relentless rhythm of the city. In many ways, the protagonist reflects myself, and shaping her journey became a process of rediscovering my own sense of self. Through the project, I came to believe that soulmates, family, and personal passions are the very things capable of transforming existence into genuine living. At the same time, the narrative quietly carries deeper emotional undercurrents - family wounds, dusty medals left forgotten over time, and unresolved feelings hidden beneath ordinary moments. One detail especially meaningful to me is the friend whom the protagonist meets by chance. The bruises left by abuse are covered with playful marker drawings by that friend - a small yet deeply compassionate gesture that gradually begins to change the protagonist herself.</p>
+<p>Ultimately, <span class="project-font">SỐNG</span> asks a simple yet deeply personal question: if we only had one day left to live, would we still approach the things we truly love with hesitation, regret, and the feeling that there will always be more time later? </p>
+</div>
+
+
+
+<div class="boxes">
+<div class="box"><span class="project-font">SỐNG</span> was an intensely personal project created with the smallest team I had ever worked with. Because of that, I chose to prioritize emotional honesty and stories drawn from my own experiences. At the same time, I wanted the models involved in the project to experience the same sense of being truly alive that I rediscovered throughout the creative process.</div>
+<div class="box"><span class="project-font">SỐNG</span> faced the greatest challenge in the lack of financial resources and equipment. I filmed the project using a compact camera that had been purchased nearly twenty years ago, which meant the video quality was far from perfect. In addition, this was my first project involving cinematography, so I still lacked experience in video editing and production.</div>
+<div class="box"> Nevertheless, what makes me most proud of <span class="project-font">SỐNG</span> is the way its message resonated with others. Not only the model - who herself struggled with serious family issues—but also many people around me expressed deep gratitude for a project that helped them reflect on the value of life. More importantly, through creating <span class="project-font">SỐNG</span>, I felt as though I had come back to life as well.</div>
+
+</section>
+
+<!-- SECTION 4 -->
+<section class="reflection">
+<p class="reveal-text">
+  <span>Through <span class="project-font">SỐNG</span>,</span>
+  <span>I realized that</span>
+  <span>to live is not merely to exist,</span>
+  <span>but to feel deeply, love sincerely,</span>
+  <span>and remember why we began.</span>
+</p>
+</section>
+
+<script src="song.js"></script>
+ <div class="ui">
+    <div class="brand">BENGAL</div>
+
+    <div class="nav">
+      <a href="index.html">HOME</a>
+  <a href="works.html">WORKS</a>
+  <a href="info.html">INFO</a>
+    </div>
+
+</body>
+</html>

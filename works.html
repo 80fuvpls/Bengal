@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>WORKS</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #ffffe3;
+  font-family: 'GeneralSans';
+  overflow-x: hidden;
+}
+
+/* ===== FONTS ===== */
+@font-face {
+  font-family: 'Melodrama';
+  src: url('assets/fonts/Melodrama-Semibold.woff2');
+}
+@font-face {
+  font-family: 'ProjectFont';
+  src: url('assets/fonts/ProjectFont.woff2');
+}
+
+@font-face {
+      font-family: 'GeneralSans';
+      src: url('assets/fonts/GeneralSans-Regular.woff2') format('woff2');
+      font-weight: 500;
+    }
+/* ===== INTRO ===== */
+.intro {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: transform 1.2s ease;
+}
+.intro h1 {
+  font-family: 'Melodrama';
+  font-size: 120px;
+  color: #ffffe3;
+  opacity: 0;
+  transition: 1s;
+}
+
+/* ===== NAV ===== */
+.brand {
+  position: fixed;
+  top: 30px;
+  left: 40px;
+  font-family: 'Melodrama';
+  font-size: 32px;
+}
+
+.nav {
+      position: fixed;
+      top: 30px;
+      right: 40px;
+      display: flex;
+      gap: 30px;
+      pointer-events: auto;
+      z-index: 9999;
+    }
+
+    .nav a {
+  color: black;
+  font-family: 'GeneralSans';
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  display: inline-block; /* 👈 dòng quan trọng */
+}
+
+    .nav a:hover {
+      transform: scale(1.15);
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0%;
+      height: 2px;
+      background: black;
+      transition: width 0.25s ease;
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+/* ===== SCROLL ===== */
+.wrapper {
+  height: 240vh;
+}
+.scene {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+/* ===== TEXT ===== */
+.left-text {
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  max-width: 220px;
+  transform: translateY(-50%);
+  font-family: 'ProjectFont';
+   pointer-events: none;
+  font-size: 63px; /* 🔥 to hơn */
+}
+
+.right-text {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Melodrama';
+  font-size: 48px; /* 🔥 nhỏ lại */
+}
+
+/* ===== STACK ===== */
+.stack {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  perspective: 1200px;
+}
+
+/* CARD */
+.card {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 500px;
+  height: 680px;
+
+  border-radius: 24px;
+  overflow: hidden;
+
+  background: transparent; /* 🔥 FIX: bỏ nền xám */
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12); /* 🔥 nhẹ lại */
+  transition: all 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.card.active:hover {
+  transform: translate(-50%, -50%) scale(1.03);
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block; /* 🔥 hết zoom */
+}
+
+/* IMAGE */
+.card.active {
+  transform: translate(-50%, -50%) scale(1) rotateX(0deg);
+  z-index: 5;
+  opacity: 1;
+}
+
+.card.next1 {
+  transform: translate(-50%, calc(-50% + 80px)) scale(0.92) rotateX(8deg);
+  opacity: 0.6;
+  z-index: 4;
+}
+
+.card.next2 {
+  transform: translate(-50%, calc(-50% + 150px)) scale(0.85) rotateX(12deg);
+  opacity: 0.25;
+  z-index: 3;
+}
+
+.card.prev {
+  transform: translate(-50%, calc(-50% - 100px)) scale(0.94) rotateX(-6deg);
+  opacity: 0.4;
+  z-index: 4;
+}
+
+/* ===== VIEW ===== */
+.view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Melodrama';
+  font-size: 36px;
+  color: white;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.card.active:hover .view {
+  opacity: 1;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="intro">
+  <h1 id="bengal">BENGAL</h1>
+</div>
+
+<div class="brand">BENGAL</div>
+
+<div class="nav">
+  <a href="index.html">HOME</a>
+  <a href="works.html">WORKS</a>
+  <a href="info.html">INFO</a>
+</div>
+
+<div class="wrapper">
+  <div class="scene">
+
+    <div class="left-text" id="leftText"></div>
+    <div class="right-text">WORKS</div>
+
+    <div class="stack" id="stack"></div>
+
+  </div>
+</div>
+
+<script src="works.js"></script>
+</body>
+</html>

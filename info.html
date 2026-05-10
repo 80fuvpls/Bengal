@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFO</title>
+
+<link rel="stylesheet" href="info.css">
+
+<style>
+/* ===== FONT ===== */
+@font-face { 
+  font-family: 'Melodrama'; 
+  src: url('assets/fonts/Melodrama-Bold.woff2');
+  font-weight: 800;
+}
+@font-face { 
+  font-family: 'Melodrama'; 
+  src: url('assets/fonts/Melodrama-Semibold.woff2');
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'GeneralSans';
+  src: url('assets/fonts/GeneralSans-Regular.woff2');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'GeneralSans';
+  src: url('assets/fonts/GeneralSans-Medium.woff2');
+  font-weight: 500;
+}
+@font-face { 
+  font-family: 'GeneralSans'; 
+  src: url('assets/fonts/GeneralSans-MediumItalic.woff2');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'ProjectFont';
+  src: url('assets/fonts/ProjectFont.woff2')
+  format('woff2');
+}
+
+@font-face {
+      font-family: 'Azeret Mono';
+      src: url('assets/fonts/AzeretMono-Thin.woff2') format('woff2');
+      font-weight: 100;
+    }
+
+
+/* ===== BASE ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'GeneralSans';
+  background: #ffffe3;
+  color:#000;
+  overflow-x:hidden;
+}
+
+/* ===== NAV ===== */
+.ui {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.ui{
+  pointer-events: none;
+}
+
+.brand {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  font-family: 'Melodrama';
+  font-weight:700;
+  font-size: 37px;
+}
+
+.nav {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  display: flex;
+  gap: 30px;
+}
+
+.nav a {
+  color: black;
+  font-size: 16px;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav a:hover {
+  transform: scale(1.15);
+}
+
+.nav a::after {
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:-4px;
+  width:0%;
+  height:2px;
+  background:black;
+  transition:0.25s;
+}
+
+.nav a:hover::after {
+  width:100%;
+}
+
+.nav, .nav a, .brand{
+  pointer-events: auto;
+}
+
+/* ===== INTRO ===== */
+.intro{
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.intro-img{
+  width:280px;
+  border-radius:12px;
+}
+
+#introImg {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: 1s;
+}
+
+/* ===== MAIN ===== */
+.container{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding-left:120px;
+  gap:80px;
+}
+
+.profile-img{
+  width:280px;
+  border-radius:12px;
+  opacity:0;
+}
+
+/* ===== HERO TEXT (to hơn) ===== */
+.hero-text{
+  opacity:0;
+  transform:translateY(30px);
+  transition:0.8s;
+  margin-top: 80px; /* đẩy xuống */
+}
+
+.hero-text h2{
+  font-family:'Melodrama';
+  font-weight:700;
+  font-size:50px;
+}
+
+.hero-text h1{
+  font-family:'Melodrama';
+  font-weight:800;
+  font-size:100px;
+  line-height:1;
+}
+
+.hero-text h3{
+  font-family:'Melodrama';
+  font-weight:700;
+  font-size:50px;
+}
+
+/* ===== INQUIRIES to hơn ===== */
+.inquiries{
+  position:absolute;
+  right:60px;
+  bottom:140px;
+  text-align:right;
+}
+
+.inquiries h4{
+  font-family:'Melodrama';
+  font-weight:700;
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+.inquiries p{
+  font-family:'GeneralSans';
+  font-weight:500;
+  font-size:18px;
+  margin-bottom:6px;
+}
+
+.inquiries a{
+  font-family:'GeneralSans';
+  font-style:italic;
+  font-size:18px;
+  color:#000;
+  text-decoration:none;
+  position:relative;
+}
+
+/* underline sẵn */
+.inquiries a::after{
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:-2px;
+  width:100%;          /* 👈 luôn hiện */
+  height:1px;
+  background:black;
+  opacity:0.5;         /* 👈 mờ nhẹ */
+  transition: all 0.3s ease;
+}
+
+/* hover effect */
+.inquiries a:hover::after{
+  width:100%;
+  opacity:1;           /* 👈 đậm lên */
+  height:2px;          /* 👈 dày hơn chút */
+}
+.inquiries a:visited{
+  color:#000;          /* 🔥 fix luôn visited */
+}
+
+.scroll{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  
+  font-family:'GeneralSans';
+  font-weight:400;
+  font-size:14px;
+
+  opacity:0.4;
+  color:#000; /* fix luôn */
+  letter-spacing:1px;
+}
+
+/* ===== SECTION 2 chỉnh cân layout ===== */
+.section2{
+  min-height:100vh;
+  display:flex;
+  justify-content:space-between;
+  padding:220px 120px 120px 120px; /* đẩy xuống thêm */
+  align-items:flex-start;
+}
+
+.quote{
+  width:45%;
+  text-align:right;
+  font-size:64px;
+  line-height:1.2;
+  opacity:0;
+  transition:1s;
+  margin-top: -80px;
+}
+
+.quote span{
+  font-family:'Melodrama';
+  font-weight:700;
+}
+
+.desc{
+  width:45%;
+  font-size:16px;
+  line-height:1.7;
+  opacity:0;
+  transition:1s;
+  margin-top:80px;
+}
+
+.highlight{
+  font-family:'Melodrama';
+  font-weight:700;
+}
+.show{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+.line{
+  opacity:0;
+  transform:translateY(40px);
+  transition:0.8s;
+}
+.line.show{
+  opacity:1;
+  transform:none;
+}
+
+/* =========================================================
+SECTION 3 — SATURN GRID
+========================================================= */
+/* =========================================================
+SECTION — SATURN EXPERIENCE
+========================================================= */
+
+.sphere-section{
+  position:relative;
+
+  width:100%;
+  min-height:100vh;
+
+  overflow:hidden;
+
+  background:#000;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* =========================================================
+CANVAS
+========================================================= */
+
+#sphereCanvas{
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  filter:
+  contrast(112%)
+  brightness(104%);
+}
+
+/* =========================================================
+MESSAGE LAYER
+========================================================= */
+
+.sphere-message{
+  position:absolute;
+  inset:0;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:
+  opacity 1.3s cubic-bezier(.19,1,.22,1);
+
+  overflow:hidden;
+}
+
+.sphere-message.show{
+  opacity:1;
+}
+
+/* =========================================================
+CURVED SCREEN
+========================================================= */
+
+/* =========================================================
+TEXT EXPERIENCE
+========================================================= */
+
+.sphere-message{
+  position:absolute;
+  inset:0;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:
+  opacity 1.2s cubic-bezier(.19,1,.22,1);
+
+  overflow:hidden;
+}
+
+.sphere-message.show{
+  opacity:1;
+}
+
+/* =========================================================
+WRAP
+========================================================= */
+
+.sphere-text-wrap{
+  position:relative;
+
+  width:min(1280px,92vw);
+
+  perspective:1800px;
+
+  transform-style:preserve-3d;
+}
+
+/* =========================================================
+VIGNETTE
+========================================================= */
+
+.sphere-text-wrap::before{
+
+  content:"";
+
+  position:absolute;
+  inset:-14%;
+
+  background:
+
+  radial-gradient(
+
+    ellipse at center,
+
+    transparent 36%,
+
+    rgba(0,0,0,.12) 58%,
+
+    rgba(0,0,0,.42) 82%,
+
+    rgba(0,0,0,.72) 100%
+
+  );
+
+  pointer-events:none;
+
+  z-index:5;
+}
+
+/* =========================================================
+TEXT
+========================================================= */
+.melodrama{
+  font-family:'Melodrama';
+  font-weight:700;
+
+  display:inline-block;
+
+  letter-spacing:0.02em;
+
+  transform:translateY(1px);
+}
+
+.sphere-text{
+
+  position:relative;
+
+  width:min(1280px,92vw);
+
+  margin:auto;
+
+  color:#ffffe3;
+
+  text-align:center;
+
+  font-family:'GeneralSans',sans-serif;
+  font-weight:400;
+
+  font-size:clamp(22px,2vw,38px);
+
+  line-height:2;
+
+  letter-spacing:.012em;
+
+  opacity:.94;
+
+  padding:2vh 1vw;
+
+  transform-style:preserve-3d;
+
+  transform:
+
+  perspective(1800px)
+
+  rotateX(8deg)
+
+  scaleX(1.04)
+
+  scaleY(1.08);
+
+  text-shadow:
+
+  0 0 2px rgba(255,255,227,.04);
+
+  animation:
+  textFloat 8s ease-in-out infinite;
+}
+
+/* =========================================================
+SCANLINES
+========================================================= */
+
+.sphere-text::before{
+
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+
+  repeating-linear-gradient(
+
+    to bottom,
+
+    rgba(255,255,227,.022) 0px,
+
+    rgba(255,255,227,.022) 1px,
+
+    transparent 2px,
+
+    transparent 4px
+
+  );
+
+  opacity:.12;
+
+  mix-blend-mode:screen;
+
+  pointer-events:none;
+}
+
+/* =========================================================
+EDGE DARKENING
+========================================================= */
+
+.sphere-text-wrap::after{
+
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+
+  radial-gradient(
+
+    ellipse at center,
+
+    transparent 44%,
+
+    rgba(0,0,0,.08) 62%,
+
+    rgba(0,0,0,.22) 78%,
+
+    rgba(0,0,0,.45) 100%
+
+  );
+
+  pointer-events:none;
+
+  mix-blend-mode:multiply;
+}
+
+#cursorLabel{
+
+  position: fixed;
+
+  left: 0;
+  top: 0;
+
+  transform:
+  translate(-50%, -50%);
+
+  pointer-events: none;
+
+  color: #ffffe3;
+
+  font-size: 11px;
+  letter-spacing: .28em;
+
+  opacity: 0;
+
+  transition:
+  opacity .25s ease,
+  transform .18s ease;
+
+  z-index: 9999;
+
+  mix-blend-mode: difference;
+
+}
+
+/* =========================================================
+FLOAT
+========================================================= */
+
+@keyframes textFloat{
+
+  0%,100%{
+
+    transform:
+
+    perspective(1800px)
+
+    rotateX(8deg)
+
+    translateY(0px)
+
+    scaleX(1.04)
+
+    scaleY(1.08);
+
+  }
+
+  50%{
+
+    transform:
+
+    perspective(1800px)
+
+    rotateX(10deg)
+
+    translateY(-4px)
+
+    scaleX(1.06)
+
+    scaleY(1.11);
+
+  }
+
+}
+
+@keyframes textFloat{
+
+  0%,100%{
+
+    transform:
+    perspective(1600px)
+    rotateX(8deg)
+    translateY(0px)
+    scaleX(1.03)
+    scaleY(1.06);
+
+  }
+
+  50%{
+
+    transform:
+    perspective(1600px)
+    rotateX(10deg)
+    translateY(-4px)
+    scaleX(1.05)
+    scaleY(1.09);
+
+  }
+
+}
+
+/* =========================================================
+RESPONSIVE
+========================================================= */
+
+@media(max-width:768px){
+
+  .sphere-text{
+
+    font-size:22px;
+
+    line-height:1.8;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <img src="assets/images/info/profile.jpg" class="intro-img" id="introImg">
+</div>
+
+<!-- NAV -->
+<div class="ui" id="ui">
+  <div class="brand">BENGAL</div>
+  <div class="nav">
+    <a href="index.html">HOME</a>
+    <a href="works.html">WORKS</a>
+    <a href="info.html">INFO</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="container">
+
+  <img src="assets/images/info/profile.jpg" class="profile-img" id="finalImg">
+
+  <div class="hero-text" id="heroText">
+    <h2>About</h2>
+    <h1>MINH ANH</h1>
+    <h3>(BENGAL)</h3>
+  </div>
+
+  <div class="inquiries">
+    <h4>INQUIRIES</h4>
+    <p>nvminhanh1208@gmail.com</p>
+    <a href="https://www.instagram.com/x.bengal.o/" target="_blank">Instagram</a>
+  </div>
+
+  <div class="scroll">SCROLL FOR MORE</div>
+
+</section>
+
+<!-- SECTION 2 -->
+<section class="section2">
+
+  <div class="desc" id="desc">
+
+  <p>
+    I am a 12th-grade student at Gia Dinh High School, with a deep interest in photography in particular and the arts in general. 
+    I use photography as a way to express emotions that have long been held within me; at the same time, it reflects how I perceive and respond to issues in society.
+  </p>
+
+  <br>
+
+  <p>
+    To me, every photograph carries a message. Through my work, I hope people can sense the range of emotions I seek to convey—feelings of isolation, passion, devotion, and even pain—but above all, a <span class="highlight">sense of freedom</span>.
+  </p>
+
+  <br>
+
+  <p>
+    I have taken on various roles across different photography projects and organizations; however, my primary roles are creative director and lead photographer.
+  </p>
+
+  <br>
+
+  <p>
+    There is still much about photography—and about the world—that I have yet to fully explore. Nevertheless, I am determined to pursue freedom, so that I may discover it for myself and, in turn, share that <span class="highlight">sense of freedom</span> with others.
+  </p>
+
+</div>
+
+  <div class="quote" id="quote">
+    <span>"Freedom</span> is the <br>
+    <span>oxygen</span> of the <br>
+    <span>soul"</span>.
+  </div>
+
+</section>
+
+<!-- =========================================================
+SPHERE SECTION
+========================================================= -->
+
+<section class="sphere-section">
+
+  <canvas id="sphereCanvas"></canvas>
+
+  <div
+    class="sphere-message"
+    id="sphereMessage"
+  >
+
+    <div class="sphere-text-wrap">
+
+      <div class="sphere-text">
+
+  Through the process of preparing my application to
+  <span class="nowrap melodrama">
+  Fulbright University Vietnam
+</span>,<br>
+
+  I would like to express my sincere gratitude to the university<br>
+  for giving me the opportunity to reflect on myself —<br>
+  on what I have experienced and what I have learned along the way.<br><br>
+
+  Regardless of the final outcome, I am truly thankful to
+  <span class="nowrap melodrama">
+  Fulbright University Vietnam
+  </span><br>
+
+  for planting in me the seeds of aspiration, passion,<br>
+  and the chance for meaningful reflection.
+
+</div>
+
+    </div>
+
+  </div>
+
+  <div id="cursorLabel">
+  CLICK
+  </div>
+
+</section>
+
+<script type="module" src="info.js"></script>
+
+</body>
+</html>
