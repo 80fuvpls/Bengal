@@ -20,11 +20,17 @@ const renderer = new THREE.WebGLRenderer({
   powerPreference: "high-performance"
 });
 
+// 🔥 FIX: giảm lag mạnh trên production
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(1.5);
+renderer.setPixelRatio(1);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+// ===== GLOBAL STATE FIX =====
+let textRing = null;
+let time = 0;
+let revealStarted = false;
 
 // ===== DATA =====
 const TOTAL = 100;
@@ -36,7 +42,6 @@ scene.add(group);
 const loader = new THREE.TextureLoader();
 
 // ===== LOADER UI =====
-
 const loaderScreen = document.getElementById('loader');
 const loadPercent = document.getElementById('loadPercent');
 
@@ -44,43 +49,42 @@ let loadedImages = 0;
 const TOTAL_IMAGES = TOTAL;
 
 function updateLoader() {
-
-  const percent = Math.floor(
-    (loadedImages / TOTAL_IMAGES) * 100
-  );
-
+  const percent = Math.floor((loadedImages / TOTAL_IMAGES) * 100);
   loadPercent.textContent = `${percent}%`;
 
-  if (loadedImages >= TOTAL_IMAGES) {
+  if (loadedImages >= TOTAL_IMAGES && !revealStarted) {
+    setTimeout(() => {
+      revealStarted = true;
 
-  // giữ loader thêm để GPU warmup
-  setTimeout(() => {
-    revealStarted = true;
-    // fade UI in trước
-    document.querySelector('.ui').style.opacity = 1;
-
-    // rồi mới hide loader
-    loaderScreen.classList.add('hide');
-
-  }, 1400);
- }
+      document.querySelector('.ui').style.opacity = 1;
+      loaderScreen.classList.add('hide');
+    }, 1200);
+  }
 }
 
-// ===== INIT =====
+// ===== FONT LOAD (FIX: tránh treo loader) =====
 (async () => {
-  await document.fonts.load("800 80px Melodrama");
-  await document.fonts.load("100 50px 'Azeret Mono'");
+  try {
+    await Promise.race([
+      document.fonts.load("800 80px Melodrama"),
+      new Promise(res => setTimeout(res, 3000))
+    ]);
 
-  textRing = createTextRing();
-  scene.add(textRing);
+    await Promise.race([
+      document.fonts.load("100 50px Azeret Mono"),
+      new Promise(res => setTimeout(res, 3000))
+    ]);
+
+    textRing = createTextRing();
+    scene.add(textRing);
+
+  } catch (e) {
+    console.log("font load fail:", e);
+  }
 })();
 
-// ===== TEXT RING (NEW SYSTEM) =====
-let textRing;
-let revealStarted = false;
-
+// ===== TEXT RING =====
 function createTextRing() {
-
   const group = new THREE.Group();
 
   const big = createTextBand({
@@ -96,7 +100,7 @@ function createTextRing() {
     radius: 4.5,
     height: 0.3,
     y: -0.4,
-    font: "100 50px 'Azeret Mono'"
+    font: "100 50px Azeret Mono"
   });
 
   group.add(big);
@@ -105,69 +109,61 @@ function createTextRing() {
   return group;
 }
 
-
-// ===== CORE =====
+// ===== TEXT BAND =====
 function createTextBand({ text, radius, height, y, font }) {
-
-  // 🧠 canvas dài
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
   canvas.width = 4096;
   canvas.height = 128;
 
- ctx.fillStyle = "#ffffe3";
-ctx.font = font;
-ctx.textBaseline = "middle";
-ctx.textAlign = "left";
+  ctx.fillStyle = "#ffffe3";
+  ctx.font = font;
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
 
-// đo text
-const metrics = ctx.measureText(text);
-const textWidth = metrics.width;
+  const metrics = ctx.measureText(text);
+  const textWidth = metrics.width;
 
-// repeat đúng cách
-const repeatCount = Math.ceil(canvas.width / textWidth) + 1;
-let repeated = text.repeat(repeatCount);
+  const repeatCount = Math.ceil(canvas.width / textWidth) + 2;
+  const repeated = text.repeat(repeatCount);
 
-// vẽ
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-ctx.fillText(repeated, 0, canvas.height / 2);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillText(repeated, 0, canvas.height / 2);
 
-// texture KHÔNG repeat
-const texture = new THREE.CanvasTexture(canvas);
-texture.wrapS = THREE.ClampToEdgeWrapping;
-texture.repeat.x = 1;
-texture.anisotropy = 16;
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.anisotropy = 16;
 
-  // 🎯 dùng cylinder = vòng tròn chuẩn
   const geometry = new THREE.CylinderGeometry(
     radius,
     radius,
     height,
     128,
     1,
-    true // open ended
+    true
   );
 
-const material = new THREE.MeshBasicMaterial({
-  map: texture,
-  transparent: true,
-  opacity: 1,
-  side: THREE.DoubleSide,
-  depthWrite: false,
-  depthTest: true,
-  alphaTest: 0.2
-});
-
-
+  const material = new THREE.MeshBasicMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 1,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    alphaTest: 0.2
+  });
 
   const mesh = new THREE.Mesh(geometry, material);
-mesh.renderOrder = 10;
   mesh.position.y = y;
 
   return mesh;
 }
 
+// ===== SAFE INCREMENT (FIX LOADER BUG) =====
+function incrementLoad() {
+  loadedImages++;
+  updateLoader();
+}
 
 // ===== CREATE SPHERE =====
 for (let i = 0; i < TOTAL; i++) {
@@ -180,52 +176,51 @@ for (let i = 0; i < TOTAL; i++) {
   const z = RADIUS * Math.sin(phi) * Math.sin(theta);
 
   loader.load(
+    `assets/images/${i + 1}.jpg`,
 
-  `assets/images/${i + 1}.jpg`,
+    (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
 
-  (texture) => {
+      const img = texture.image;
+      const aspect = img.width / img.height;
 
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.generateMipmaps = false;
-texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.anisotropy = 16;
+      const base = 1.2;
+      const width = aspect >= 1 ? base : base * aspect;
+      const height = aspect >= 1 ? base / aspect : base;
 
-    const img = texture.image;
-    const aspect = img.width / img.height;
+      const geo = new THREE.PlaneGeometry(width, height);
 
-    const base = 1.2;
+      const mat = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0,
+        depthWrite: true
+      });
 
-    const width = aspect >= 1 ? base : base * aspect;
-    const height = aspect >= 1 ? base / aspect : base;
+      const mesh = new THREE.Mesh(geo, mat);
 
-    const geo = new THREE.PlaneGeometry(width, height);
+      mesh.position.set(x, y, z);
+      mesh.lookAt(0, 0, 0);
 
-    const mat = new THREE.MeshBasicMaterial({
-      map: texture,
-      transparent: true,
-      opacity: 0,
-      side: THREE.FrontSide,
-      depthWrite: true,
-      depthTest: true
-    });
+      mesh.scale.set(0.6, 0.6, 0.6);
 
-    const mesh = new THREE.Mesh(geo, mat);
+      mesh.userData.fadeIn = true;
+      mesh.userData.delay = ((Math.atan2(z, x) + Math.PI) / (2 * Math.PI)) * 2;
 
-    mesh.renderOrder = 0;
-    mesh.position.set(x, y, z);
-    mesh.lookAt(0, 0, 0);
+      group.add(mesh);
 
-    mesh.scale.set(0.6, 0.6, 0.6);
+      incrementLoad();
+    },
 
-    mesh.userData.fadeIn = true;
-    mesh.userData.delay = ((Math.atan2(z, x) + Math.PI) / (2 * Math.PI)) * 2;
+    undefined,
 
-    group.add(mesh);
-
-    loadedImages++;
-    updateLoader();
-  });
+    (err) => {
+      console.log("❌ IMAGE FAIL:", i + 1, err);
+      incrementLoad();
+    }
+  );
 }
 
 // ===== DRAG =====
@@ -272,7 +267,6 @@ const FOV_IN = 75;
 const FOV_OUT = 60;
 
 window.addEventListener('wheel', (e) => {
-
   if (e.deltaY > 0) {
     targetZ = Z_OUT;
     targetFov = FOV_OUT;
@@ -283,7 +277,6 @@ window.addEventListener('wheel', (e) => {
     targetRotation.x = 0;
     targetRotation.y = 0;
   }
-
 });
 
 // ===== ANIMATE =====
@@ -304,90 +297,52 @@ function animate() {
 
   camera.lookAt(0, 0, 0);
 
-  if (revealStarted) {
-   time += 0.01;
-  }
+  if (revealStarted) time += 0.01;
 
-group.children.forEach(mesh => {
-  if (mesh.userData.fadeIn) {
+  group.children.forEach(mesh => {
+    if (!mesh.userData.fadeIn) return;
 
     const delay = mesh.userData.delay;
 
     if (revealStarted && time > delay) {
 
-      const targetScale = 0.6;
-      const progress = Math.min(
-  (time - delay) * 0.6,
-  1
-);
+      const progress = Math.min((time - delay) * 0.6, 1);
 
       mesh.material.opacity = progress;
 
       if (progress >= 0.99) {
-  mesh.material.transparent = false;
-  mesh.material.opacity = 1;
-}
+        mesh.material.opacity = 1;
+      }
 
-     mesh.scale.x += (targetScale - mesh.scale.x) * 0.06;
-mesh.scale.y += (targetScale - mesh.scale.y) * 0.06;
-
-mesh.material.opacity = Math.min(progress, 1);
+      mesh.scale.x += (0.6 - mesh.scale.x) * 0.06;
+      mesh.scale.y += (0.6 - mesh.scale.y) * 0.06;
     }
-  }
-});
-
-  
-
-// ===== TEXT RING =====
-if (textRing) {
-
-  const zoomt = (currentZ - Z_IN) / (Z_OUT - Z_IN);
-
-  // quay đúng trục
-  textRing.rotation.y += 0.002;
-
-  // tilt cinematic
-  textRing.rotation.z = -0.1 - zoomt * 0.15;
-  textRing.rotation.x = 0.08 + zoomt * 0.1;
-
-  // fade
-  const opacity = Math.min(Math.max((zoomt - 0.2) * 2, 0), 1);
-
-  textRing.children.forEach(mesh => {
-    mesh.material.opacity = opacity;
   });
 
-  textRing.visible = zoomt > 0.1;
-}
+  if (textRing) {
+    const zoomt = (currentZ - Z_IN) / (Z_OUT - Z_IN);
 
-  // ===== BACKGROUND =====
-  const bgt = (currentZ - Z_IN) / (Z_OUT - Z_IN);
+    textRing.rotation.y += 0.002;
+    textRing.rotation.z = -0.1 - zoomt * 0.15;
+    textRing.rotation.x = 0.08 + zoomt * 0.1;
 
-  if (bgt < 0.25) {
-    document.body.style.background = "#000000";
-  } else {
-    document.body.style.background = `
-      radial-gradient(circle at center,
-        #000000 0%,
-        #000000 20%,
-        #680101 55%,
-        #282d65 75%,
-        #67a9e8 90%,
-        #ffffe3 100%
-      )
-    `;
+    const opacity = Math.min(Math.max((zoomt - 0.2) * 2, 0), 1);
+
+    textRing.children.forEach(mesh => {
+      mesh.material.opacity = opacity;
+    });
+
+    textRing.visible = zoomt > 0.1;
   }
 
   renderer.render(scene, camera);
 }
 
 renderer.setAnimationLoop(animate);
-let time = 0;
+
 // ===== RESIZE =====
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-
