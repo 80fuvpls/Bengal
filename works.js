@@ -1,7 +1,7 @@
 const projects = [
   {
     title: "SỐNG",
-    image: "./public/images/song/preview.jpg",
+    image: "./assets/images/song/metqua.jpg",
     link: "song.html"
   },
   {
