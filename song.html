@@ -413,18 +413,14 @@ font-size:22px;
   box-shadow:
     0 0 120px rgba(0,0,0,.45);
 
-  opacity:0;
+  position:relative;
+  z-index:10;
 
-  transform:
-    scale(1.03)
-    translateY(20px);
+  opacity:1;
 
-  filter:
-    blur(10px)
-    saturate(.9);
+  transform:none;
 
-  animation:
-    filmReveal 2s cubic-bezier(.19,1,.22,1) .2s forwards;
+  filter:none;
 
   transition:
     transform .9s cubic-bezier(.19,1,.22,1),
@@ -1070,8 +1066,8 @@ To feel, to live, to love.
 
     <video
   id="songFilm"
-  src="/videos/Songfinal.mp4"
-  poster="/images/song/preview.jpg"
+  src="./assets/videos/songfilm.mp4"
+  poster="./assets/images/song/preview.jpg"
   playsinline
   controls
   preload="auto"
